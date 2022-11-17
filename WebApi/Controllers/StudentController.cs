@@ -8,9 +8,9 @@ namespace WebApi.Controllers;
 public class StudentController : ControllerBase
 {
     private readonly ILogger<StudentController> _logger;
-    private readonly StudentContext _context;
+    private readonly DataContext _context;
 
-    public StudentController(ILogger<StudentController> logger, StudentContext context)
+    public StudentController(ILogger<StudentController> logger, DataContext context)
     {
         _logger = logger;
         _context = context;

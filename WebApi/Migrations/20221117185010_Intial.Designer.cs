@@ -11,9 +11,9 @@ using WebApi.Models;
 
 namespace contemp_programming_final_project.Migrations
 {
-    [DbContext(typeof(StudentContext))]
-    [Migration("20221117182506_Initial")]
-    partial class Initial
+    [DbContext(typeof(DataContext))]
+    [Migration("20221117185010_Intial")]
+    partial class Intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

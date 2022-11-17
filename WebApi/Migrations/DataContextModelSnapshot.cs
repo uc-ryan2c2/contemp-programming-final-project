@@ -10,8 +10,8 @@ using WebApi.Models;
 
 namespace contemp_programming_final_project.Migrations
 {
-    [DbContext(typeof(StudentContext))]
-    partial class StudentContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DataContext))]
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
