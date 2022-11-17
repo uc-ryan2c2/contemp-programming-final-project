@@ -17,37 +17,38 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet]
-    [Route("GetStudent")]
     [ProducesResponseType(typeof(Student), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<Student>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult GetStudent()
+    public IActionResult GetStudent(int? id)
     {
-        try
+        if (id == null){
+            try
+            {
+                if (_context.Students == null || !_context.Students.Any()) return NotFound("No Students found in the database.");
+                return Ok(_context.Students?.Take(5).ToList());
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        } 
+        else 
         {
-            if (_context.Students == null || !_context.Students.Any()) return NotFound("No Students found in the database");
-            return Ok(_context.Students.ToList());
-        }
-        catch(Exception e)
-        {
-            return Problem(e.Message);
+            try
+            {
+                var student = _context.Students?.Find(id);
+                if (student == null) return NotFound($"Student with id {id} was not found.");
+                return Ok(student);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
     }
-
-    [HttpGet]
-    [Route("GetStudentByID")]
-    [ProducesResponseType(typeof(Student), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult GetStudentBYId(int id)
-    {
-        var Student = _context.Students?.Find(id);
-        if (Student == null){
-            return NotFound("The requested resource was not found");
-        }
-        return Ok(Student);
-    }
-
+    
     [HttpDelete]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
