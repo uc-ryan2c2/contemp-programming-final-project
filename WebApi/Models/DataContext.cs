@@ -8,6 +8,8 @@ namespace WebApi.Models{
 
         public DbSet<Student>? Students { get; set; }
 
+        public DbSet<Student>? Hobby { get; set; }
+        
         // More DbSets go here for each table
         
     }
