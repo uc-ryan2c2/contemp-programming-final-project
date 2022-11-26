@@ -7,7 +7,7 @@ namespace WebApi.Models{
         public DataContext(DbContextOptions<DataContext> options) : base(options) {}
 
         public DbSet<Student>? Students { get; set; }
-
+        public DbSet<VideoGame>? VideoGames {get; set;}
         // More DbSets go here for each table
         
     }
