@@ -49,29 +49,7 @@ public class StudentController : ControllerBase
         }
     }
     
-    [HttpDelete]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult DeleteStudent(int id)
-    {
-        try {
-            var student = _context.Students?.Find(id);
-            if (student == null) return NotFound($"Student with id \"{id}\" was not found");
-
-            _context.Students?.Remove(student);
-            var result = _context.SaveChanges();
-
-            if (result < 1) return Problem("Delete was not successful. Please try again");
-
-            return Ok($"Successfully deleted student with id \"{id}\", Student Name: {student.Name}");
-        }
-        catch(Exception e){
-                return Problem(e.Message);
-        }
-    }
-
-    [HttpPost]
+     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
@@ -121,4 +99,27 @@ public class StudentController : ControllerBase
             return Problem(e.Message);
         }
     }
+
+    [HttpDelete]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    public IActionResult DeleteStudent(int id)
+    {
+        try {
+            var student = _context.Students?.Find(id);
+            if (student == null) return NotFound($"Student with id \"{id}\" was not found");
+
+            _context.Students?.Remove(student);
+            var result = _context.SaveChanges();
+
+            if (result < 1) return Problem("Delete was not successful. Please try again");
+
+            return Ok($"Successfully deleted student with id \"{id}\", Student Name: {student.Name}");
+        }
+        catch(Exception e){
+                return Problem(e.Message);
+        }
+    }
+
 }
