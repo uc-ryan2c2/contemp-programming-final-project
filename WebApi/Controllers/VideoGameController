@@ -23,18 +23,30 @@ public class VideoGameController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public IActionResult GetVideoGame(int? id)
     {
-        try
+         if (id == null){
+            try
+            {
+                if (_context.VideoGames == null || !_context.VideoGames.Any()) return NotFound("No Video Games found in the database.");
+                return Ok(_context.VideoGames?.Take(5).ToList());
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        } 
+        else 
         {
-        var game = _context.VideoGames.Find(id);
-        if (game == null)
-        return NotFound(id);
-
-        return Ok(game);
-        }
-        catch (Exception e)
-        {
-            return Problem(e.Message);
-        }
+            try
+            {
+                var game = _context.VideoGames?.Find(id);
+                if (game == null) return NotFound($"Video Game with id {id} was not found.");
+                return Ok(game);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+    }
     }
 
     [HttpDelete]
