@@ -6,30 +6,30 @@ using WebApi.Models;
 namespace contemp_programming_final_project.Controllers
 {
     [ApiController]
-    [Route("api/shows/[controller]")]
-    public class showsController : ControllerBase
+    [Route("[controller]")]
+    public class ShowController : ControllerBase
     {
-        private readonly ILogger<showsController> _logger;
+        private readonly ILogger<ShowController> _logger;
         private readonly DataContext _context;
 
-        public showsController(ILogger<showsController> logger, DataContext context)
+        public ShowController(ILogger<ShowController> logger, DataContext context)
     {
         _logger = logger;
         _context = context;
     }
-        // GET: api/<showsController>
+        // GET: api/<ShowController>
         [HttpGet]
         [ProducesResponseType(typeof(Show), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(List<Show>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult GetStudent(int? id)
+    public IActionResult GetShow(int? id)
     {
         if (id == null){
             try
             {
                 if (_context.Shows == null || !_context.Shows.Any()) return NotFound("No Shows found in the database.");
-                return Ok(_context.Students?.Take(5).ToList());
+                return Ok(_context.Shows?.Take(5).ToList());
             }
             catch (Exception e)
             {
@@ -51,17 +51,17 @@ namespace contemp_programming_final_project.Controllers
         }
     }
 
-        // POST api/<showsController>
+        // POST api/<ShowController>
         [HttpPost]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult CreateStudent(Student showToAdd)
+    public IActionResult CreateShow(Show showToAdd)
     {
         showToAdd.Id = 0;
         try
         {
-            _context.Students?.Add(showToAdd);
+            _context.Shows?.Add(showToAdd);
             var result = _context.SaveChanges();
 
             if(result < 1) return Problem("Addition was not successful. Please try again");
@@ -74,25 +74,25 @@ namespace contemp_programming_final_project.Controllers
         }
     }
 
-        // PUT api/<showsController>/5
+        // PUT api/<ShowController>/5
         [HttpPut]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult UpdateStudent(Student showToEdit)
+    public IActionResult UpdateShow(Show showToEdit)
     {
         if (showToEdit.Id < 1) return BadRequest("Pleas provide a valid Id");
 
         try{
-            var Student = _context.Students?.Find(showToEdit.Id);
-            if (Student == null) return NotFound("Show was not found");
+            var show = _context.Shows?.Find(showToEdit.Id);
+            if (show == null) return NotFound("Show was not found");
             
-            Student.Name = showToEdit.Name;
-            Student.BirthDate = showToEdit.BirthDate;
-            Student.CollegeProgram = showToEdit.CollegeProgram;
-            Student.YearInCollege = showToEdit.YearInCollege;
+            show.Name = showToEdit.Name;
+            show.DateOfRelease = showToEdit.DateOfRelease;
+            show.Seasons = showToEdit.Seasons;
+            show.Genre = showToEdit.Genre;  
 
-            _context.Students?.Update(Student);
+            _context.Shows?.Update(show);
             var result = _context.SaveChanges();
 
             if (result < 1 ) return Problem("Update was not successful. Please try again");
@@ -105,7 +105,7 @@ namespace contemp_programming_final_project.Controllers
         }
     }
 
-        // DELETE api/<showsController>/5
+        // DELETE api/<ShowController>/5
         [HttpDelete]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
