@@ -23,12 +23,12 @@ namespace contemp_programming_final_project.Controllers
         [ProducesResponseType(typeof(List<Shows>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult GetStudent(int? id)
+    public IActionResult GetStudent(int? id)
     {
         if (id == null){
             try
             {
-                if (_context.Shows == null || !_context.Shows.Any()) return NotFound("No Students found in the database.");
+                if (_context.Shows == null || !_context.Shows.Any()) return NotFound("No Shows found in the database.");
                 return Ok(_context.Students?.Take(5).ToList());
             }
             catch (Exception e)
@@ -41,7 +41,7 @@ namespace contemp_programming_final_project.Controllers
             try
             {
                 var show = _context.Shows?.Find(id);
-                if (show == null) return NotFound($"Student with id {id} was not found.");
+                if (show == null) return NotFound($"Show with id {id} was not found.");
                 return Ok(show);
             }
             catch (Exception e)
@@ -56,7 +56,7 @@ namespace contemp_programming_final_project.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateStudent(Student showToAdd)
+    public IActionResult CreateStudent(Student showToAdd)
     {
         showToAdd.Id = 0;
         try
@@ -76,14 +76,56 @@ namespace contemp_programming_final_project.Controllers
 
         // PUT api/<showsController>/5
         [HttpPut]
-        public void Put(int id, [FromBody] string value)
-        {
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    public IActionResult UpdateStudent(Student showToEdit)
+    {
+        if (showToEdit.Id < 1) return BadRequest("Pleas provide a valid Id");
+
+        try{
+            var Student = _context.Students?.Find(showToEdit.Id);
+            if (Student == null) return NotFound("Show was not found");
+            
+            Student.Name = showToEdit.Name;
+            Student.BirthDate = showToEdit.BirthDate;
+            Student.CollegeProgram = showToEdit.CollegeProgram;
+            Student.YearInCollege = showToEdit.YearInCollege;
+
+            _context.Students?.Update(Student);
+            var result = _context.SaveChanges();
+
+            if (result < 1 ) return Problem("Update was not successful. Please try again");
+
+            return Ok("Update successful");
         }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
+    }
 
         // DELETE api/<showsController>/5
         [HttpDelete]
-        public void Delete(int id)
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    public IActionResult DeleteShow(int id)
         {
+            try {
+                var Show = _context.Shows?.Find(id);
+                if (Show == null) return NotFound($"Show with id {id} was not found");
+
+                _context.Shows?.Remove(Show);
+                var result = _context.SaveChanges();
+
+                if (result < 1) return Problem("Delete was not successful. Please try again");
+
+                return Ok("Deletion successful");
+            }
+            catch(Exception e){
+                    return Problem(e.Message);
+            }
         }
     }
 }
