@@ -1,33 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 
-namespace WebApi.GameController;
+namespace WebApi.HobbyController;
 
 [ApiController]
 [Route("[controller]")]
-public class VideoGameController : ControllerBase
+public class HobbyController : ControllerBase
 {
-    private readonly ILogger<VideoGameController> _logger;
+    private readonly ILogger<HobbyController> _logger;
     private readonly DataContext _context;
 
-    public VideoGameController(ILogger<VideoGameController> logger, DataContext context)
+    public HobbyController(ILogger<HobbyController> logger, DataContext context)
     {
         _logger = logger;
         _context = context;
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(VideoGame), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<VideoGame>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Hobby), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<Hobby>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult GetVideoGame(int? id)
+    public IActionResult GetHobby(int? id)
     {
          if (id == null){
             try
             {
-                if (_context.VideoGames == null || !_context.VideoGames.Any()) return NotFound("No Video Games found in the database.");
-                return Ok(_context.VideoGames?.Take(5).ToList());
+                if (_context.Hobbys == null || !_context.Hobbys.Any()) return NotFound("No hobbys found in the database.");
+                return Ok(_context.Hobbys?.Take(5).ToList());
             }
             catch (Exception e)
             {
@@ -38,9 +38,9 @@ public class VideoGameController : ControllerBase
         {
             try
             {
-                var game = _context.VideoGames?.Find(id);
-                if (game == null) return NotFound($"Video Game with id {id} was not found.");
-                return Ok(game);
+                var hobby = _context.Hobbys?.Find(id);
+                if (hobby == null) return NotFound($"hobby with id {id} was not found.");
+                return Ok(hobby);
             }
             catch (Exception e)
             {
@@ -53,17 +53,17 @@ public class VideoGameController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult CreateVideoGame(VideoGame newGame)
+    public IActionResult CreateHobby(Hobby newhobby)
     {
-        newGame.Id = 0;
+        newhobby.Id = 0;
         try
         {
-            _context.VideoGames?.Add(newGame);
+            _context.Hobbys?.Add(newhobby);
             var result = _context.SaveChanges();
 
             if (result < 1) return Problem("New addition was unsuccessful. PLease Try Again");
 
-                return Ok(newGame);
+                return Ok(newhobby);
         }
         catch(Exception e)
         {
@@ -76,20 +76,20 @@ public class VideoGameController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult UpdateVideoGame(VideoGame GameToEdit)
+    public IActionResult UpdateHobby(Hobby hobbyToEdit)
     {
-        if (GameToEdit.Id < 1) return BadRequest("Please enter another id");
+        if (hobbyToEdit.Id < 1) return BadRequest("Please enter another id");
         try
         {
-        var game = _context.VideoGames?.Find(GameToEdit.Id);
-        if (game == null) return NotFound("The video game you are looking for was not found");
+        var hobby = _context.Hobbys?.Find(hobbyToEdit.Id);
+        if (hobby == null) return NotFound("The hobby you are looking for was not found");
 
-        game.Name = GameToEdit.Name;
-        game.ReleaseDate = GameToEdit.ReleaseDate;
-        game.Genre = GameToEdit.Genre;
-        game.NumberOfPLayers = GameToEdit.NumberOfPLayers;
+        hobby.Name = hobbyToEdit.Name;
+        hobby.StartOfHobby = hobbyToEdit.StartOfHobby;
+        hobby.Category = hobbyToEdit.Category;
+        hobby.YearsOfHavingHobby = hobbyToEdit.YearsOfHavingHobby;
 
-        _context.VideoGames.Update(game);
+        _context.Hobbys.Update(hobby);
         var result = _context.SaveChanges();
 
         if (result < 1) return Problem("Update was not successful, please try again");
@@ -105,20 +105,20 @@ public class VideoGameController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult DeleteVideoGame(int id)
+    public IActionResult DeleteHobby(int id)
     {
         try
         {
-        var game = _context.VideoGames?.Find(id);
-        if (game == null)
+        var hobby = _context.Hobbys?.Find(id);
+        if (hobby == null)
         return NotFound(id);
 
-        _context.VideoGames?.Remove(game);
+        _context.Hobbys?.Remove(hobby);
         var result = _context.SaveChanges();
 
         if (result < 1) return NotFound(id);
 
-        return Ok(game);
+        return Ok(hobby);
         }
         catch(Exception e)
         {
