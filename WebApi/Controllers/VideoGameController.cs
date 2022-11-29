@@ -23,42 +23,29 @@ public class VideoGameController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public IActionResult GetVideoGame(int? id)
     {
-        try
+         if (id == null){
+            try
+            {
+                if (_context.VideoGames == null || !_context.VideoGames.Any()) return NotFound("No Video Games found in the database.");
+                return Ok(_context.VideoGames?.Take(5).ToList());
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        } 
+        else 
         {
-        var game = _context.VideoGames.Find(id);
-        if (game == null)
-        return NotFound(id);
-
-        return Ok(game);
-        }
-        catch (Exception e)
-        {
-            return Problem(e.Message);
-        }
-    }
-
-    [HttpDelete]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public IActionResult DeleteVideoGame(int id)
-    {
-        try
-        {
-        var game = _context.VideoGames.Find(id);
-        if (game == null)
-        return NotFound(id);
-
-        _context.VideoGames.Remove(game);
-        var result = _context.SaveChanges();
-
-        if (result < 1) return NotFound(id);
-
-        return Ok(game);
-        }
-        catch(Exception e)
-        {
-            return Problem(e.Message);
+            try
+            {
+                var game = _context.VideoGames?.Find(id);
+                if (game == null) return NotFound($"Video Game with id {id} was not found.");
+                return Ok(game);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
     }
 
@@ -71,7 +58,7 @@ public class VideoGameController : ControllerBase
         newGame.Id = 0;
         try
         {
-            _context.VideoGames.Add(newGame);
+            _context.VideoGames?.Add(newGame);
             var result = _context.SaveChanges();
 
             if (result < 1) return Problem("New addition was unsuccessful. PLease Try Again");
@@ -94,7 +81,7 @@ public class VideoGameController : ControllerBase
         if (GameToEdit.Id < 1) return BadRequest("Please enter another id");
         try
         {
-        var game = _context.VideoGames.Find(GameToEdit.Id);
+        var game = _context.VideoGames?.Find(GameToEdit.Id);
         if (game == null) return NotFound("The video game you are looking for was not found");
 
         game.Name = GameToEdit.Name;
@@ -107,6 +94,31 @@ public class VideoGameController : ControllerBase
 
         if (result < 1) return Problem("Update was not successful, please try again");
         return Ok("Update Successful");
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    public IActionResult DeleteVideoGame(int id)
+    {
+        try
+        {
+        var game = _context.VideoGames?.Find(id);
+        if (game == null)
+        return NotFound(id);
+
+        _context.VideoGames?.Remove(game);
+        var result = _context.SaveChanges();
+
+        if (result < 1) return NotFound(id);
+
+        return Ok(game);
         }
         catch(Exception e)
         {
