@@ -19,8 +19,8 @@ namespace contemp_programming_final_project.Controllers
     }
         // GET: api/<showsController>
         [HttpGet]
-        [ProducesResponseType(typeof(Shows), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(List<Shows>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Show), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<Show>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public IActionResult GetStudent(int? id)

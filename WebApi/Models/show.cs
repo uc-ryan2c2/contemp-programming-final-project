@@ -1,6 +1,6 @@
 namespace WebApi.Models
 {
-    public class Shows
+    public class Show
     {
         public int Id {get; set;}
         public string? Name {get; set;}

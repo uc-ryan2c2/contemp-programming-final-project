@@ -8,7 +8,7 @@ namespace WebApi.Models{
 
         public DbSet<Student>? Students { get; set; }
 
-        public DbSet<Shows>? Shows { get; set;}
+        public DbSet<Show>? Shows { get; set;}
         // More DbSets go here for each table
         
     }
