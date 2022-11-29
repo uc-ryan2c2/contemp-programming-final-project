@@ -89,7 +89,7 @@ public class HobbyController : ControllerBase
         hobby.Category = hobbyToEdit.Category;
         hobby.YearsOfHavingHobby = hobbyToEdit.YearsOfHavingHobby;
 
-        _context.Hobbys.Update(hobby);
+        _context.Hobbys?.Update(hobby);
         var result = _context.SaveChanges();
 
         if (result < 1) return Problem("Update was not successful, please try again");

@@ -89,7 +89,7 @@ public class VideoGameController : ControllerBase
         game.Genre = GameToEdit.Genre;
         game.NumberOfPLayers = GameToEdit.NumberOfPLayers;
 
-        _context.VideoGames.Update(game);
+        _context.VideoGames?.Update(game);
         var result = _context.SaveChanges();
 
         if (result < 1) return Problem("Update was not successful, please try again");
